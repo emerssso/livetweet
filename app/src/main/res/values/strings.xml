@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TalkTweeter</string>
+    <string name="login_failed">Looks like something went wrong with login. Please try again.</string>
+    <string name="prepend">Speaker</string>
+    <string name="append">Hashtag(s)</string>
+    <string name="body">Body</string>
+    <string name="finish_talk">Finish Talk</string>
+    <string name="title_tweet_activity">Send next update</string>
+    <string name="send_next_length">Send next update (%d)</string>
+    <string name="update_empty">Fill something in. You can\'t send an empty update!</string>
+    <string name="tweet_too_long">Combined message too long!</string>
+</resources>

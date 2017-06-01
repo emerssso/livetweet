@@ -1,33 +1,9 @@
 package com.emerssso.livetweet
 
-import com.emerssso.livetweet.StringUtils.buildMessage
-import com.emerssso.livetweet.StringUtils.isNonEmpty
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StringUtilsTest {
-
-    @Test fun shouldReturnFalseForNull() {
-        assertFalse(isNonEmpty(null))
-    }
-
-    @Test fun shouldReturnFalseForEmpty() {
-        assertFalse(isNonEmpty(""))
-    }
-
-    @Test
-    fun shouldReturnFalseForWhitespace() {
-        assertFalse(isNonEmpty(" \n\t"))
-    }
-
-    @Test fun shouldReturnTrueForMixed() {
-        assertTrue(isNonEmpty(" t"))
-        assertTrue(isNonEmpty("t "))
-    }
-
-    @Test fun shouldReturnTrueForNonWhitespace() {
-        assertTrue(isNonEmpty("t"))
-    }
 
     @Test fun shouldReturnAll() {
         assertEquals("prepend body append", buildMessage("prepend", "body", "append"))

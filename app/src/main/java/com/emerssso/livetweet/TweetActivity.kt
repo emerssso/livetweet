@@ -127,9 +127,9 @@ class TweetActivity : AppCompatActivity() {
         val append = editAppend.text.toString()
         val body = editBody.text.toString()
 
-        val message = StringUtils.buildMessage(prepend, body, append)
+        val message = buildMessage(prepend, body, append)
 
-        if (StringUtils.isNonEmpty(message) && message.length <= MAX_UPDATE_LENGTH) {
+        if (!message.isNullOrBlank() && message.length <= MAX_UPDATE_LENGTH) {
             tweetSender.queueTweet(message)
             editBody.setText("")
             editBody.requestFocus()

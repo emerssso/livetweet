@@ -9,4 +9,6 @@
     <string name="send_next_length">Send next update (%d)</string>
     <string name="update_empty">Fill something in. You can\'t send an empty update!</string>
     <string name="tweet_too_long">Combined message too long!</string>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">Fitx6SIezqH4LYcoL2qYocgxB</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">3m3uz96DI2ZyiuO8RZxIZPuSK6HyKaXeYn1NiTXGwK2mrZOsmJ</string>
 </resources>

@@ -7,9 +7,8 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import com.twitter.sdk.android.Twitter
 import kotlinx.android.synthetic.main.activity_tweet.*
+import org.jetbrains.anko.toast
 
 class TweetActivity : AppCompatActivity() {
 
@@ -18,7 +17,7 @@ class TweetActivity : AppCompatActivity() {
         val KEY_LAST_UPDATE_ID = "LAST_UPDATE_ID"
     }
 
-    private var tweetSender = TweetSender(Twitter.getApiClient().statusesService)
+    private var tweetSender = TweetSender(getStatusesService())
     private var prependLength = 0
     private var appendLength = 0
     private var bodyLength = 0
@@ -111,7 +110,7 @@ class TweetActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_finish_talk -> {
-                tweetSender = TweetSender(Twitter.getApiClient().statusesService)
+                tweetSender = TweetSender(getStatusesService())
 
                 editPrepend.setText("")
                 editBody.setText("")
@@ -134,9 +133,9 @@ class TweetActivity : AppCompatActivity() {
             editBody.setText("")
             editBody.requestFocus()
         } else if (message.length > MAX_UPDATE_LENGTH) {
-            Toast.makeText(this, R.string.tweet_too_long, Toast.LENGTH_LONG).show()
+            toast(R.string.tweet_too_long)
         } else {
-            Toast.makeText(this, R.string.update_empty, Toast.LENGTH_LONG).show()
+            toast(R.string.update_empty)
         }
     }
 }

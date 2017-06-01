@@ -1,5 +1,7 @@
 package com.emerssso.livetweet
 
+import com.twitter.sdk.android.core.TwitterCore
+
 /**
  * Concatenates three strings into a message: "prepend body append",
  * with spaces only included if needed.
@@ -11,7 +13,7 @@ package com.emerssso.livetweet
  * *
  * @return Result of the concatenation
  */
-fun buildMessage(prepend: String?, body: String?, append: String?): String {
+internal fun buildMessage(prepend: String?, body: String?, append: String?): String {
     if (!body.isNullOrBlank()) {
         if (!prepend.isNullOrBlank()) {
             if (!append.isNullOrBlank()) {
@@ -30,3 +32,5 @@ fun buildMessage(prepend: String?, body: String?, append: String?): String {
         return ""
     }
 }
+
+internal fun getStatusesService() = TwitterCore.getInstance().apiClient.statusesService

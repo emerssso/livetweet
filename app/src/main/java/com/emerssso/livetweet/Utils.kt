@@ -1,5 +1,8 @@
 package com.emerssso.livetweet
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import com.twitter.sdk.android.core.TwitterCore
 
 /**
@@ -34,3 +37,23 @@ internal fun buildMessage(prepend: String?, body: String?, append: String?): Str
 }
 
 internal fun getStatusesService() = TwitterCore.getInstance().apiClient.statusesService
+
+val EditText.content: String
+    get() = text.toString()
+
+internal fun EditText.onTextChanged(operation: (CharSequence?) -> Unit) {
+    addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            operation(s)
+        }
+
+    })
+}

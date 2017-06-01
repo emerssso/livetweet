@@ -2,8 +2,6 @@ package com.emerssso.livetweet
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -32,50 +30,20 @@ class TweetActivity : AppCompatActivity() {
             tweetSender.lastId = savedInstanceState.getLong(KEY_LAST_UPDATE_ID)
         }
 
-        editPrepend.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+        editPrepend.onTextChanged {
+            prependLength = it?.length ?: 0
+            setRemainingChars()
+        }
 
-            }
+        editAppend.onTextChanged {
+            appendLength = it?.length ?: 0
+            setRemainingChars()
+        }
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                prependLength = charSequence.length
-                setRemainingChars()
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-
-            }
-        })
-
-        editAppend.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
-            }
-
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                appendLength = charSequence.length
-                setRemainingChars()
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-
-            }
-        })
-
-        editBody.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
-            }
-
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                bodyLength = charSequence.length
-                setRemainingChars()
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-
-            }
-        })
+        editBody.onTextChanged {
+            bodyLength = it?.length ?: 0
+            setRemainingChars()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -108,34 +76,28 @@ class TweetActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_finish_talk -> {
-                tweetSender = TweetSender(getStatusesService())
+        if (item.itemId == R.id.action_finish_talk) {
+            tweetSender = TweetSender(getStatusesService())
 
-                editPrepend.setText("")
-                editBody.setText("")
+            editPrepend.setText("")
+            editBody.setText("")
 
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+            return true
         }
+        else return super.onOptionsItemSelected(item)
     }
 
-    fun sendTweet(view: View?) {
-        val prepend = editPrepend.text.toString()
-        val append = editAppend.text.toString()
-        val body = editBody.text.toString()
+    fun sendTweet(@Suppress("UNUSED_PARAMETER") view: View?) {
+        val message = buildMessage(editPrepend.content, editBody.content, editAppend.content)
 
-        val message = buildMessage(prepend, body, append)
-
-        if (!message.isNullOrBlank() && message.length <= MAX_UPDATE_LENGTH) {
-            tweetSender.queueTweet(message)
-            editBody.setText("")
-            editBody.requestFocus()
-        } else if (message.length > MAX_UPDATE_LENGTH) {
-            toast(R.string.tweet_too_long)
-        } else {
-            toast(R.string.update_empty)
+        when {
+            message.length > MAX_UPDATE_LENGTH -> toast(R.string.tweet_too_long)
+            message.isBlank() -> toast(R.string.update_empty)
+            else -> {
+                tweetSender.queueTweet(message)
+                editBody.setText("")
+                editBody.requestFocus()
+            }
         }
     }
 }

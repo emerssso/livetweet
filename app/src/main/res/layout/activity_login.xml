@@ -35,5 +35,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_into_twitter_intro"
+        style="@style/AppTheme.Header"
+        android:textAlignment="center"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/twitterLoginButton"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"/>
+
 
 </android.support.constraint.ConstraintLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.emerssso.livetweet"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+          package="com.emerssso.livetweet"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -13,7 +14,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:fullBackupContent="false">
+        android:fullBackupContent="false"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name=".LoginActivity">
             <intent-filter>

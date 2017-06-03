@@ -2,7 +2,6 @@ package com.emerssso.livetweet
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.EditText
 import com.twitter.sdk.android.core.TwitterCore
 
@@ -44,12 +43,6 @@ internal fun getMediaService() = TwitterCore.getInstance().apiClient.mediaServic
 
 val EditText.content: String
     get() = text.toString()
-
-val View.visible: Boolean
-    get() = visibility == View.VISIBLE
-
-val Int.megabytes: Int
-    get() = this * 1000000
 
 internal fun EditText.onTextChanged(operation: (CharSequence?) -> Unit) {
     addTextChangedListener(object : TextWatcher {

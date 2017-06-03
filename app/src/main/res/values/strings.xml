@@ -11,4 +11,8 @@
     <string name="tweet_too_long">Combined message too long!</string>
     <string name="com.twitter.sdk.android.CONSUMER_KEY">Fitx6SIezqH4LYcoL2qYocgxB</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">3m3uz96DI2ZyiuO8RZxIZPuSK6HyKaXeYn1NiTXGwK2mrZOsmJ</string>
+    <string name="attach_a_photo">Attach a photo</string>
+    <string name="get_photo">Take or select a photo to attach to current tweet</string>
+    <string name="photo_attachment_failed">Photo attachment failed</string>
+    <string name="your_photo">Your photo</string>
 </resources>

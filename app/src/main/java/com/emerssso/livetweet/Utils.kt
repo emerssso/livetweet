@@ -2,6 +2,7 @@ package com.emerssso.livetweet
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import com.twitter.sdk.android.core.TwitterCore
 
@@ -16,8 +17,9 @@ import com.twitter.sdk.android.core.TwitterCore
  * *
  * @return Result of the concatenation
  */
-internal fun buildMessage(prepend: String?, body: String?, append: String?): String {
-    if (!body.isNullOrBlank()) {
+internal fun buildMessage(prepend: String?, body: String?, append: String?,
+                          bodyCanBeBlank: Boolean = false): String {
+    if (!body.isNullOrBlank() || bodyCanBeBlank) {
         if (!prepend.isNullOrBlank()) {
             if (!append.isNullOrBlank()) {
                 return String.format("%s %s %s", prepend, body, append)
@@ -38,8 +40,16 @@ internal fun buildMessage(prepend: String?, body: String?, append: String?): Str
 
 internal fun getStatusesService() = TwitterCore.getInstance().apiClient.statusesService
 
+internal fun getMediaService() = TwitterCore.getInstance().apiClient.mediaService
+
 val EditText.content: String
     get() = text.toString()
+
+val View.visible: Boolean
+    get() = visibility == View.VISIBLE
+
+val Int.megabytes: Int
+    get() = this * 1000000
 
 internal fun EditText.onTextChanged(operation: (CharSequence?) -> Unit) {
     addTextChangedListener(object : TextWatcher {

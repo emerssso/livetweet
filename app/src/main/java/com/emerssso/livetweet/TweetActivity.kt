@@ -1,24 +1,33 @@
 package com.emerssso.livetweet
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_tweet.*
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.warn
 
-class TweetActivity : AppCompatActivity() {
+
+class TweetActivity : AppCompatActivity(), AnkoLogger {
 
     companion object {
         val MAX_UPDATE_LENGTH = 140
         val KEY_LAST_UPDATE_ID = "LAST_UPDATE_ID"
+        val REQUEST_PHOTO = 1
     }
 
-    private var tweetSender = TweetSender(getStatusesService())
+    private var tweetSender = TweetSender(getStatusesService(), getMediaService())
     private var prependLength = 0
     private var appendLength = 0
     private var bodyLength = 0
+    private var photo: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +64,51 @@ class TweetActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_tweet_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_finish_talk -> {
+                startNewThread()
+                return true
+            }
+            R.id.action_add_photo -> {
+                selectPhoto()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == REQUEST_PHOTO) {
+            when(resultCode) {
+                RESULT_OK -> {
+                    if(data != null) {
+                        val inputStream = contentResolver.openInputStream(data.data)
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+                        attachedPhoto.setImageBitmap(bitmap)
+                        attachedPhoto.visibility = View.VISIBLE
+
+                        photo = bitmap
+                    } else {
+                        toast(R.string.photo_attachment_failed)
+                        warn("no photo included in result")
+                    }
+                }
+                else -> {
+                    toast(R.string.photo_attachment_failed)
+                    warn("result code was $resultCode")
+                }
+            }
+        }
+        else super.onActivityResult(requestCode, resultCode, data)
+    }
+
     private fun setRemainingChars() {
         var length = MAX_UPDATE_LENGTH
 
@@ -70,21 +124,24 @@ class TweetActivity : AppCompatActivity() {
         toolbar.title = getString(R.string.send_next_length, length)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_tweet_activity, menu)
-        return true
+    private fun startNewThread() {
+        tweetSender = TweetSender(getStatusesService(), getMediaService())
+
+        editPrepend.setText("")
+        editBody.setText("")
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_finish_talk) {
-            tweetSender = TweetSender(getStatusesService())
+    private fun selectPhoto() {
+        val pickIntent = Intent()
+        pickIntent.type = "image/*"
+        pickIntent.action = Intent.ACTION_GET_CONTENT
 
-            editPrepend.setText("")
-            editBody.setText("")
+        val chooserIntent = Intent.createChooser(pickIntent, getString(R.string.get_photo))
 
-            return true
-        }
-        else return super.onOptionsItemSelected(item)
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                arrayOf(Intent(MediaStore.ACTION_IMAGE_CAPTURE)))
+
+        startActivityForResult(chooserIntent, REQUEST_PHOTO)
     }
 
     fun sendTweet(@Suppress("UNUSED_PARAMETER") view: View?) {
@@ -94,9 +151,12 @@ class TweetActivity : AppCompatActivity() {
             message.length > MAX_UPDATE_LENGTH -> toast(R.string.tweet_too_long)
             message.isBlank() -> toast(R.string.update_empty)
             else -> {
-                tweetSender.queueTweet(message)
+                tweetSender.queueTweet(Status(message, photo))
+
                 editBody.setText("")
                 editBody.requestFocus()
+                photo = null
+                attachedPhoto.visibility = View.GONE
             }
         }
     }

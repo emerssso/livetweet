@@ -1,40 +1,76 @@
 package com.emerssso.livetweet
 
+import android.graphics.Bitmap
 import com.twitter.sdk.android.core.Callback
 import com.twitter.sdk.android.core.Result
 import com.twitter.sdk.android.core.TwitterException
+import com.twitter.sdk.android.core.models.Media
 import com.twitter.sdk.android.core.models.Tweet
+import com.twitter.sdk.android.core.services.MediaService
 import com.twitter.sdk.android.core.services.StatusesService
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.getStackTraceString
+import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
+import java.io.ByteArrayOutputStream
 import java.util.*
 
-class TweetSender(private val statusesService: StatusesService) : AnkoLogger {
+class TweetSender(private val statusesService: StatusesService,
+                  private val mediaService: MediaService) : AnkoLogger {
 
-    private val messages = ArrayDeque<String>()
+    private val messages = ArrayDeque<Status>()
     var lastId: Long? = null
     private var inProgress = false
 
-    fun queueTweet(message: String) {
+    fun queueTweet(status: Status) {
         if (messages.isEmpty() && !inProgress) {
-            sendTweet(message)
+            sendTweet(status)
         } else {
-            messages.add(message)
+            messages.add(status)
         }
     }
 
-    private fun sendTweet(message: String) {
+    private fun sendTweet(status: Status) {
         inProgress = true
-        val call = statusesService.update(message, lastId, false, null, null, null, null, true, null)
+        if(status.photo != null) {
+            val stream = ByteArrayOutputStream()
+            status.photo.compress(Bitmap.CompressFormat.WEBP, 100, stream)
+
+            val media = RequestBody.create(MediaType.parse("image/*"), stream.toByteArray())
+
+            val call = mediaService.upload(media, null, null)
+            call?.enqueue(object : Callback<Media>() {
+                override fun success(result: Result<Media>?) {
+                    val mediaId = result?.data?.mediaIdString
+                    info("media uploaded successfully with ID: $mediaId " +
+                            "and result code ${result?.response?.code()}")
+                    sendMessage(status, mediaId)
+                }
+
+                override fun failure(exception: TwitterException?) {
+                    warn("unable to upload photo: ${exception?.getStackTraceString()}")
+                    sendMessage(status)
+                }
+            })
+        } else {
+            sendMessage(status)
+        }
+    }
+
+    private fun sendMessage(status: Status, mediaId: String? = null) {
+        val call = statusesService.update(status.message, lastId,
+                false, null, null, null, null, true, mediaId)
+
         call?.enqueue(object : Callback<Tweet>() {
-            override fun success(result: Result<Tweet>) {
-                lastId = result.data.id
+            override fun success(result: Result<Tweet>?) {
+                lastId = result?.data?.id
                 sendNextTweet()
             }
 
-            override fun failure(exception: TwitterException) {
-                warn("failure: ${exception.getStackTraceString()}")
+            override fun failure(exception: TwitterException?) {
+                warn("failure: ${exception?.getStackTraceString()}")
                 sendNextTweet()
             }
         })

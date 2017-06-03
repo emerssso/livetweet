@@ -6,4 +6,10 @@
         android:icon="@drawable/ic_done_all_white_24dp"
         android:title="@string/finish_talk"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_add_photo"
+        android:icon="@drawable/ic_add_a_photo_white_24dp"
+        android:title="@string/attach_a_photo"
+        app:showAsAction="ifRoom"
+        />
 </menu>

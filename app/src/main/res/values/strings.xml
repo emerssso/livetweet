@@ -16,4 +16,6 @@
     <string name="photo_attachment_failed">Photo attachment failed</string>
     <string name="your_photo">Your photo</string>
     <string name="log_into_twitter_intro">Please log into your Twitter account to get started!</string>
+    <string name="version_number">Version %s</string>
+    <string name="open_source_libraries">Open Source Libraries</string>
 </resources>

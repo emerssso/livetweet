@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="define_support_constraintlayout">year;owner</string>
+    <!-- Author section -->
+    <string name="library_support_constraintlayout_author">AOSP</string>
+    <string name="library_support_constraintlayout_authorWebsite">https://source.android.com/</string>
+    <!-- Library section -->
+    <string name="library_support_constraintlayout_libraryName">Support ConstraintLayout</string>
+    <string name="library_support_constraintlayout_libraryDescription">A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.  ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).</string>
+    <string name="library_support_constraintlayout_libraryWebsite">https://developer.android.com/training/constraint-layout/index.html</string>
+    <string name="library_support_constraintlayout_libraryVersion">1.0.2</string>
+    <!-- OpenSource section -->
+    <string name="library_support_constraintlayout_isOpenSource">false</string>
+    <string name="library_support_constraintlayout_repositoryLink"/>
+    <!-- ClassPath for autoDetect section -->
+    <string name="library_support_constraintlayout_classPath">android.support.constraint.BuildConfig</string>
+    <!-- License section -->
+    <string name="library_support_constraintlayout_licenseId">apache_2_0</string>
+    <!-- Custom variables section -->
+    <string name="library_support_constraintlayout_owner">The Android Open Source Project</string>
+    <string name="library_support_constraintlayout_year">2016</string>
+</resources>

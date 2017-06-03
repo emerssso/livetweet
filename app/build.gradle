@@ -9,8 +9,8 @@ android {
         applicationId "com.emerssso.livetweet"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 4
-        versionName "0.4"
+        versionCode 5
+        versionName "0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -19,6 +19,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+    testOptions {
+        unitTests.setReturnDefaultValues(true)
     }
 }
 
@@ -30,6 +36,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.twitter.sdk.android:twitter-core:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.mikepenz:aboutlibraries:5.9.6'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -39,6 +46,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.8.9"
     testCompile 'com.nhaarman:mockito-kotlin:1.4.0'
+    testCompile "org.robolectric:robolectric:3.3.2"
 }
 repositories {
     jcenter()

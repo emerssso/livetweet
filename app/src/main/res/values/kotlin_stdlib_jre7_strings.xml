@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="define_kotlin_stdlib_jre7">year;owner</string>
+    <!-- Author section -->
+    <string name="library_kotlin_stdlib_jre7_author">JetBrains</string>
+    <string name="library_kotlin_stdlib_jre7_authorWebsite">https://www.jetbrains.com/</string>
+    <!-- Library section -->
+    <string name="library_kotlin_stdlib_jre7_libraryName">Kotlin Stdlib JRE7</string>
+    <string name="library_kotlin_stdlib_jre7_libraryDescription">Kotlin is a concise, safe, interoperable, tool-friendly language for the JVM.</string>
+    <string name="library_kotlin_stdlib_jre7_libraryWebsite">https://kotlinlang.org/</string>
+    <string name="library_kotlin_stdlib_jre7_libraryVersion">1.1.2–3</string>
+    <!-- OpenSource section -->
+    <string name="library_kotlin_stdlib_jre7_isOpenSource">true</string>
+    <string name="library_kotlin_stdlib_jre7_repositoryLink">https://github.com/JetBrains/kotlin</string>
+    <!-- ClassPath for autoDetect section -->
+    <string name="library_kotlin_stdlib_jre7_classPath">kotlin.KotlinVersion</string>
+    <!-- License section -->
+    <string name="library_kotlin_stdlib_jre7_licenseId">apache_2_0</string>
+    <!-- Custom variables section -->
+    <string name="library_kotlin_stdlib_jre7_owner">JetBrains</string>
+    <string name="library_kotlin_stdlib_jre7_year">2016</string>
+</resources>

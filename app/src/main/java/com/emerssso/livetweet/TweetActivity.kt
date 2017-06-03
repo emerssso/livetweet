@@ -1,18 +1,24 @@
 package com.emerssso.livetweet
 
+import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_tweet.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.warn
+import org.jetbrains.anko.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class TweetActivity : AppCompatActivity(), AnkoLogger {
@@ -20,14 +26,16 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     companion object {
         val MAX_UPDATE_LENGTH = 140
         val KEY_LAST_UPDATE_ID = "LAST_UPDATE_ID"
+        val KEY_PHOTO_FILE = "KEY_PHOTO_FILE"
         val REQUEST_PHOTO = 1
+        val REQUEST_WRITE_PERMISSION = 2
     }
 
     private var tweetSender = TweetSender(getStatusesService(), getMediaService())
     private var prependLength = 0
     private var appendLength = 0
     private var bodyLength = 0
-    private var photo: Bitmap? = null
+    private var photoFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +45,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
 
         if (savedInstanceState != null) {
             tweetSender.lastId = savedInstanceState.getLong(KEY_LAST_UPDATE_ID)
+            photoFile = File(savedInstanceState.getString(KEY_PHOTO_FILE))
         }
 
         editPrepend.onTextChanged {
@@ -61,6 +70,10 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             outState.putLong(KEY_LAST_UPDATE_ID, lastId)
         }
 
+        if(photoFile != null) {
+            outState.putString(KEY_PHOTO_FILE, photoFile?.absolutePath)
+        }
+
         super.onSaveInstanceState(outState)
     }
 
@@ -72,7 +85,10 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_finish_talk -> {
-                startNewThread()
+                alert("Do you want to finish the current talk thread?") {
+                    yesButton { startNewThread() }
+                    noButton {  }
+                }.show()
                 return true
             }
             R.id.action_add_photo -> {
@@ -84,29 +100,31 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == REQUEST_PHOTO) {
-            when(resultCode) {
+        when (requestCode) {
+            REQUEST_PHOTO -> when (resultCode) {
                 RESULT_OK -> {
-                    if(data != null) {
-                        val inputStream = contentResolver.openInputStream(data.data)
-                        val bitmap = BitmapFactory.decodeStream(inputStream)
-
-                        attachedPhoto.setImageBitmap(bitmap)
-                        attachedPhoto.visibility = View.VISIBLE
-
-                        photo = bitmap
-                    } else {
-                        toast(R.string.photo_attachment_failed)
-                        warn("no photo included in result")
-                    }
+                    info("loading $photoFile into screen")
+                    Picasso.with(this)
+                            .load(photoFile)
+                            .into(attachedPhoto)
+                    attachedPhoto.visibility = View.VISIBLE
                 }
                 else -> {
                     toast(R.string.photo_attachment_failed)
                     warn("result code was $resultCode")
                 }
             }
+            else -> super.onActivityResult(requestCode, resultCode, data)
         }
-        else super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if(requestCode == REQUEST_WRITE_PERMISSION) {
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectPhoto()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun setRemainingChars() {
@@ -132,16 +150,31 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun selectPhoto() {
-        val pickIntent = Intent()
-        pickIntent.type = "image/*"
-        pickIntent.action = Intent.ACTION_GET_CONTENT
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-        val chooserIntent = Intent.createChooser(pickIntent, getString(R.string.get_photo))
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
 
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-                arrayOf(Intent(MediaStore.ACTION_IMAGE_CAPTURE)))
+            photoFile = File.createTempFile("JPEG_" + timeStamp + "_", ".jpg",
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))
 
-        startActivityForResult(chooserIntent, REQUEST_PHOTO)
+            val photoUri = FileProvider.getUriForFile(this,
+                    "com.emerssso.livetweet.fileprovider", photoFile)
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+
+            startActivityForResult(cameraIntent, REQUEST_PHOTO)
+        } else {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+                toast("We need to write files so that we can cache" +
+                        " pictures taken before we upload them to Twitter")
+            }
+
+            ActivityCompat.requestPermissions(this,
+                    listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE).toTypedArray(),
+                    REQUEST_WRITE_PERMISSION)
+        }
     }
 
     fun sendTweet(@Suppress("UNUSED_PARAMETER") view: View?) {
@@ -151,11 +184,11 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             message.length > MAX_UPDATE_LENGTH -> toast(R.string.tweet_too_long)
             message.isBlank() -> toast(R.string.update_empty)
             else -> {
-                tweetSender.queueTweet(Status(message, photo))
+                tweetSender.queueTweet(Status(message, photoFile))
 
                 editBody.setText("")
                 editBody.requestFocus()
-                photo = null
+                photoFile = null
                 attachedPhoto.visibility = View.GONE
             }
         }

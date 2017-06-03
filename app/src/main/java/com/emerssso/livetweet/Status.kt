@@ -1,6 +1,6 @@
 package com.emerssso.livetweet
 
-import android.graphics.Bitmap
+import java.io.File
 
 /**
  * Models a tweet ("status") as considered by this app. Status is used here over tweet to avoid
@@ -9,4 +9,4 @@ import android.graphics.Bitmap
  * @param photo is an optional photo to attach to the tweet
  */
 data class Status(val message: String,
-                  val photo: Bitmap? = null)
+                  val photo: File? = null)

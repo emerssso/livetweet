@@ -1,6 +1,5 @@
 package com.emerssso.livetweet
 
-import android.graphics.Bitmap
 import com.nhaarman.mockito_kotlin.*
 import com.twitter.sdk.android.core.models.Media
 import com.twitter.sdk.android.core.models.Tweet
@@ -11,6 +10,7 @@ import org.mockito.Mockito.verify
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class TweetSenderTest {
     companion object {
@@ -18,7 +18,7 @@ class TweetSenderTest {
         private val MEDIA_ID = 123L
     }
 
-    val bitmap = mock<Bitmap>()
+    val file = mock<File>()
     val tweetCall = mock<Call<Tweet>>()
     val mediaCall = mock<Call<Media>>()
     val statusesService = mock<StatusesService> {
@@ -43,7 +43,7 @@ class TweetSenderTest {
 
     @Test
     fun shouldSendMediaThenMessage() {
-        sut.queueTweet(Status(TEST_1, bitmap))
+        sut.queueTweet(Status(TEST_1, file))
 
         val media = Media(MEDIA_ID, "$MEDIA_ID", 5, null)
         val response = mock<Response<Media>> {

@@ -1,6 +1,5 @@
 package com.emerssso.livetweet
 
-import android.graphics.Bitmap
 import com.twitter.sdk.android.core.Callback
 import com.twitter.sdk.android.core.Result
 import com.twitter.sdk.android.core.TwitterException
@@ -14,7 +13,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
-import java.io.ByteArrayOutputStream
 import java.util.*
 
 class TweetSender(private val statusesService: StatusesService,
@@ -35,10 +33,8 @@ class TweetSender(private val statusesService: StatusesService,
     private fun sendTweet(status: Status) {
         inProgress = true
         if(status.photo != null) {
-            val stream = ByteArrayOutputStream()
-            status.photo.compress(Bitmap.CompressFormat.WEBP, 100, stream)
 
-            val media = RequestBody.create(MediaType.parse("image/*"), stream.toByteArray())
+            val media = RequestBody.create(MediaType.parse("image/*"), status.photo)
 
             val call = mediaService.upload(media, null, null)
             call?.enqueue(object : Callback<Media>() {

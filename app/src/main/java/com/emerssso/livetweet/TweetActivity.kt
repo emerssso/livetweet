@@ -46,6 +46,9 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
         if (savedInstanceState != null) {
             tweetSender.lastId = savedInstanceState.getLong(KEY_LAST_UPDATE_ID)
             photoFile = File(savedInstanceState.getString(KEY_PHOTO_FILE))
+            if(photoFile != null) {
+                showPhotoFile()
+            }
         }
 
         editPrepend.onTextChanged {
@@ -104,10 +107,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             REQUEST_PHOTO -> when (resultCode) {
                 RESULT_OK -> {
                     info("loading $photoFile into screen")
-                    Picasso.with(this)
-                            .load(photoFile)
-                            .into(attachedPhoto)
-                    attachedPhoto.visibility = View.VISIBLE
+                    showPhotoFile()
                 }
                 else -> {
                     toast(R.string.photo_attachment_failed)
@@ -116,6 +116,13 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             }
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun showPhotoFile() {
+        Picasso.with(this)
+                .load(photoFile)
+                .into(attachedPhoto)
+        attachedPhoto.visibility = View.VISIBLE
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

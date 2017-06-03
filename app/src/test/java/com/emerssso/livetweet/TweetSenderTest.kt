@@ -6,12 +6,17 @@ import com.twitter.sdk.android.core.models.Tweet
 import com.twitter.sdk.android.core.services.MediaService
 import com.twitter.sdk.android.core.services.StatusesService
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class)
 class TweetSenderTest {
     companion object {
         private val TEST_1 = "test1"

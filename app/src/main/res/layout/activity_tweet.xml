@@ -118,7 +118,7 @@
         app:srcCompat="@drawable/ic_send_white_24dp"
         android:tint="@android:color/white"
         android:id="@+id/floatingActionButton"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_anchor="@id/scroll"
         app:layout_anchorGravity="end|bottom"
         app:elevation="6dp"

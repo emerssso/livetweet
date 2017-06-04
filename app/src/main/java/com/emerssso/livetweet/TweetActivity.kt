@@ -45,7 +45,9 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
 
         if (savedInstanceState != null) {
             tweetSender.lastId = savedInstanceState.getLong(KEY_LAST_UPDATE_ID)
-            photoFile = File(savedInstanceState.getString(KEY_PHOTO_FILE))
+
+            val path = savedInstanceState.getString(KEY_PHOTO_FILE)
+            photoFile = if (path != null) File(path) else null
             if(photoFile != null) {
                 showPhotoFile()
             }

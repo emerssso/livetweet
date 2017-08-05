@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.squareup.picasso.Picasso
+import com.twitter.sdk.android.core.TwitterException
 import kotlinx.android.synthetic.main.activity_tweet.*
 import org.jetbrains.anko.*
 import java.io.File
@@ -36,6 +37,12 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     private var appendLength = 0
     private var bodyLength = 0
     private var photoFile: File? = null
+    private var resumed = false
+    private val callback = object : TweetSender.FailureCallback {
+        override fun onFailure(exception: TwitterException?) {
+            if(resumed) toast(getString(R.string.unable_to_send, exception?.message))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +59,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
                 showPhotoFile()
             }
         }
+        tweetSender.registerCallback(callback)
 
         editPrepend.onTextChanged {
             prependLength = it?.length ?: 0
@@ -67,6 +75,16 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             bodyLength = it?.length ?: 0
             setRemainingChars()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resumed = true
+    }
+
+    override fun onPause() {
+        resumed = false
+        super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -153,6 +171,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
 
     private fun startNewThread() {
         tweetSender = TweetSender(getStatusesService(), getMediaService())
+        tweetSender.registerCallback(callback)
 
         editPrepend.setText("")
         editBody.setText("")

@@ -1,6 +1,7 @@
 package com.emerssso.livetweet
 
 import com.nhaarman.mockito_kotlin.*
+import com.twitter.sdk.android.core.TwitterException
 import com.twitter.sdk.android.core.models.Media
 import com.twitter.sdk.android.core.models.Tweet
 import com.twitter.sdk.android.core.services.MediaService
@@ -33,11 +34,12 @@ class TweetSenderTest {
     val mediaService = mock<MediaService> {
         on {upload(any(), anyOrNull(), anyOrNull())} doReturn mediaCall
     }
+    val failureCallback = mock<TweetSender.FailureCallback>()
+    val exception = TwitterException("This is a test!")
 
     private val sut = TweetSender(statusesService, mediaService)
 
     @Test
-    @Throws(Exception::class)
     fun shouldQueueIfEmpty() {
         sut.queueTweet(Status(TEST_1))
 
@@ -67,5 +69,20 @@ class TweetSenderTest {
         verify(statusesService)
                 .update(TEST_1, null, false, null, null, null, null, true, "$MEDIA_ID")
         verify(tweetCall).enqueue(any())
+    }
+
+    @Test
+    fun shouldNotifyCallbacksOnFailure() {
+        whenever(tweetCall.enqueue(any())).thenAnswer { invocation ->
+            val callback = invocation?.getArgument<com.twitter.sdk.android.core.Callback<Tweet>>(0)
+
+            callback?.failure(exception)
+        }
+
+        sut.registerCallback(failureCallback)
+
+        sut.queueTweet(Status(TEST_1))
+
+        verify(failureCallback).onFailure(exception)
     }
 }

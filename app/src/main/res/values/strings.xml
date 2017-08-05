@@ -18,4 +18,5 @@
     <string name="log_into_twitter_intro">Please log into your Twitter account to get started!</string>
     <string name="version_number">Version %s</string>
     <string name="open_source_libraries">Open Source Libraries</string>
+    <string name="unable_to_send">Unable to send a tweet. Here\'s the error: %s</string>
 </resources>

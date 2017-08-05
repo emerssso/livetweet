@@ -21,6 +21,11 @@ class TweetSender(private val statusesService: StatusesService,
     private val messages = ArrayDeque<Status>()
     var lastId: Long? = null
     private var inProgress = false
+    private val callbacks = mutableListOf<FailureCallback>()
+
+    interface FailureCallback {
+        fun onFailure(exception: TwitterException?)
+    }
 
     fun queueTweet(status: Status) {
         if (messages.isEmpty() && !inProgress) {
@@ -28,6 +33,14 @@ class TweetSender(private val statusesService: StatusesService,
         } else {
             messages.add(status)
         }
+    }
+
+    fun registerCallback(callback: FailureCallback) {
+        callbacks.add(callback)
+    }
+
+    fun unregisterCallback(callback: FailureCallback) {
+        callbacks.remove(callback)
     }
 
     private fun sendTweet(status: Status) {
@@ -47,6 +60,7 @@ class TweetSender(private val statusesService: StatusesService,
 
                 override fun failure(exception: TwitterException?) {
                     warn("unable to upload photo: ${exception?.getStackTraceString()}")
+                    notifyCallbacksOfFailure(exception)
                     sendMessage(status)
                 }
             })
@@ -67,6 +81,7 @@ class TweetSender(private val statusesService: StatusesService,
 
             override fun failure(exception: TwitterException?) {
                 warn("failure: ${exception?.getStackTraceString()}")
+                notifyCallbacksOfFailure(exception)
                 sendNextTweet()
             }
         })
@@ -77,6 +92,12 @@ class TweetSender(private val statusesService: StatusesService,
             sendTweet(messages.remove())
         } else {
             inProgress = false
+        }
+    }
+
+    private fun notifyCallbacksOfFailure(exception: TwitterException?) {
+        for(callback in callbacks) {
+            callback.onFailure(exception)
         }
     }
 }

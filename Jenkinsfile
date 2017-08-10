@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
+                sh 'chmod +x gradlew'
                 sh './gradlew clean build'
 
                 //moving this here so that the graph reflects test failures

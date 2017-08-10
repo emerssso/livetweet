@@ -17,7 +17,6 @@ import retrofit2.Response
 import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class)
 class TweetSenderTest {
     companion object {
         private val TEST_1 = "test1"

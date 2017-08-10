@@ -24,10 +24,12 @@ android {
         warning 'InvalidPackage'
     }
     testOptions {
-        unitTests.setReturnDefaultValues(true)
+        unitTests {
+            setReturnDefaultValues(true)
+            includeAndroidResources = true
+        }
         unitTests.all {
             setIgnoreFailures(true)
-            includeAndroidResources = true
         }
     }
 }

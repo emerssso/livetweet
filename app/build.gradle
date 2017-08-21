@@ -26,7 +26,6 @@ android {
     testOptions {
         unitTests {
             setReturnDefaultValues(true)
-            includeAndroidResources = true
         }
         unitTests.all {
             setIgnoreFailures(true)

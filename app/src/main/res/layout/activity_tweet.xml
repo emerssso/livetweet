@@ -124,5 +124,6 @@
         app:elevation="6dp"
         app:layout_insetEdge="bottom"
         app:pressedTranslationZ="12dp"
-        android:onClick="sendTweet"/>
+        android:onClick="sendTweet"
+        android:focusable="true"/>
 </android.support.design.widget.CoordinatorLayout>

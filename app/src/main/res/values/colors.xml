@@ -9,6 +9,8 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
 
+    <color name="ic_launcher_background">#00796B</color>
+
     <!--Overrides for AboutLibraries-->
     <color name="colorPrimary">@color/primary</color>
     <color name="colorPrimaryDark">@color/primary_dark</color>

@@ -13,6 +13,14 @@ android {
         versionName "0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        Properties twitter = new Properties()
+        twitter.load(project.rootProject.file('twitter.properties').newDataInputStream())
+        def key = twitter.consumerKey
+        def secret = twitter.consumerSecret
+
+        buildConfigField "String", "TWITTER_CONSUMER_KEY", key
+        buildConfigField "String", "TWITTER_CONSUMER_SECRET", secret
     }
     buildTypes {
         release {
@@ -34,9 +42,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.android.support:design:26.0.0'
-    compile 'com.android.support:cardview-v7:26.0.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile "org.jetbrains.anko:anko-commons:0.10.1"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

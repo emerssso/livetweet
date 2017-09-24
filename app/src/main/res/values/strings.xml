@@ -9,8 +9,6 @@
     <string name="send_next_length">Send next update (%d)</string>
     <string name="update_empty">Fill something in. You can\'t send an empty update!</string>
     <string name="tweet_too_long">Combined message too long!</string>
-    <string name="com.twitter.sdk.android.CONSUMER_KEY">***REMOVED***</string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET">***REMOVED***</string>
     <string name="attach_a_photo">Attach a photo</string>
     <string name="get_photo">Take or select a photo to attach to current tweet</string>
     <string name="photo_attachment_failed">Photo attachment failed</string>

@@ -17,4 +17,9 @@
     <string name="version_number">Version %s</string>
     <string name="open_source_libraries">Open Source Libraries</string>
     <string name="unable_to_send">Unable to send a tweet. Here\'s the error: %s</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="privacy_policy">TalkTweeter doesn\'t keep any of your personal information either locally or online (if you don\'t believe me, see for yourself: https://github.com/emerssso/livetweet).\n\nHowever, it does have a privacy policy to comply with Google\'s rules. It is available here: https://www.iubenda.com/privacy-policy/8224947.\nPlease accept the policy before continuing to use the app.</string>
+    <string name="policy_not_accepted">Please accept the privacy policy before using TalkTweeter</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
 </resources>

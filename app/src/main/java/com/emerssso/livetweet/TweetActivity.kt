@@ -1,6 +1,7 @@
 package com.emerssso.livetweet
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -80,6 +81,13 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     override fun onResume() {
         super.onResume()
         resumed = true
+
+        //don't proceed if privacy policy was bypassed
+        if(getSharedPreferences(FIRST_TIME_USE, Context.MODE_PRIVATE)
+                .getBoolean(FIRST_TIME_USE, true)) {
+            toast(getString(R.string.policy_not_accepted))
+            finish()
+        }
     }
 
     override fun onPause() {

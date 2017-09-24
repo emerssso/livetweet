@@ -5,6 +5,8 @@ import android.text.TextWatcher
 import android.widget.EditText
 import com.twitter.sdk.android.core.TwitterCore
 
+val FIRST_TIME_USE = "com.emerssso.livetweet.FIRST_TIME_USE"
+
 /**
  * Concatenates three strings into a message: "prepend body append",
  * with spaces only included if needed.

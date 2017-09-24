@@ -16,25 +16,20 @@ import com.twitter.sdk.android.core.TwitterCore
  * *
  * @return Result of the concatenation
  */
-internal fun buildMessage(prepend: String?, body: String?, append: String?,
-                          bodyCanBeBlank: Boolean = false): String {
-    if (!body.isNullOrBlank() || bodyCanBeBlank) {
-        if (!prepend.isNullOrBlank()) {
-            if (!append.isNullOrBlank()) {
-                return String.format("%s %s %s", prepend, body, append)
-            } else {
-                return String.format("%s %s", prepend, body)
-            }
-        } else {
-            if (!append.isNullOrBlank()) {
-                return String.format("%s %s", body, append)
-            } else {
-                return body ?: ""
-            }
-        }
-    } else {
-        return ""
-    }
+internal fun buildMessage(prepend: String?, body: String?, append: String?): String {
+    return if(body.isFilled()) {
+        val b = StringBuilder()
+
+        if(prepend.isFilled()) b.append(prepend).append(" ")
+        b.append(body)
+        if(append.isFilled()) b.append(" ").append(append)
+
+        b.toString()
+    } else ""
+}
+
+internal fun String?.isFilled(): Boolean {
+    return !this.isNullOrBlank()
 }
 
 internal fun getStatusesService() = TwitterCore.getInstance().apiClient.statusesService

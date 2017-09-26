@@ -12,12 +12,11 @@ class LiveTweetApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val config = TwitterConfig.Builder(this)
+        Twitter.initialize(TwitterConfig.Builder(this)
                 .logger(DefaultLogger(Log.DEBUG))
                 .twitterAuthConfig(TwitterAuthConfig(BuildConfig.TWITTER_CONSUMER_KEY,
                         BuildConfig.TWITTER_CONSUMER_SECRET))
                 .debug(BuildConfig.DEBUG)
-                .build()
-        Twitter.initialize(config)
+                .build())
     }
 }

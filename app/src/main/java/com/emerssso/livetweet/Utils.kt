@@ -5,7 +5,12 @@ import android.text.TextWatcher
 import android.widget.EditText
 import com.twitter.sdk.android.core.TwitterCore
 
-val FIRST_TIME_USE = "com.emerssso.livetweet.FIRST_TIME_USE"
+const val FIRST_TIME_USE = "com.emerssso.livetweet.FIRST_TIME_USE"
+const val MAX_UPDATE_LENGTH = 140
+const val KEY_LAST_UPDATE_ID = "LAST_UPDATE_ID"
+const val KEY_PHOTO_FILE = "KEY_PHOTO_FILE"
+const val REQUEST_PHOTO = 1
+const val REQUEST_WRITE_PERMISSION = 2
 
 /**
  * Concatenates three strings into a message: "prepend body append",
@@ -30,18 +35,15 @@ internal fun buildMessage(prepend: String?, body: String?, append: String?): Str
     } else ""
 }
 
-internal fun String?.isFilled(): Boolean {
-    return !this.isNullOrBlank()
-}
+internal fun String?.isFilled(): Boolean = !this.isNullOrBlank()
 
-internal fun getStatusesService() = TwitterCore.getInstance().apiClient.statusesService
+internal val statusesService get() = TwitterCore.getInstance().apiClient.statusesService
 
-internal fun getMediaService() = TwitterCore.getInstance().apiClient.mediaService
+internal val mediaService get() = TwitterCore.getInstance().apiClient.mediaService
 
-internal fun getSessionManager() = TwitterCore.getInstance().sessionManager
+internal val sessionManager get() = TwitterCore.getInstance().sessionManager
 
-val EditText.content: String
-    get() = text.toString()
+val EditText.content: String get() = text.toString()
 
 internal fun EditText.onTextChanged(operation: (CharSequence?) -> Unit) {
     addTextChangedListener(object : TextWatcher {

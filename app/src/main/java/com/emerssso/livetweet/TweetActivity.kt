@@ -25,15 +25,7 @@ import java.util.*
 
 class TweetActivity : AppCompatActivity(), AnkoLogger {
 
-    companion object {
-        val MAX_UPDATE_LENGTH = 140
-        val KEY_LAST_UPDATE_ID = "LAST_UPDATE_ID"
-        val KEY_PHOTO_FILE = "KEY_PHOTO_FILE"
-        val REQUEST_PHOTO = 1
-        val REQUEST_WRITE_PERMISSION = 2
-    }
-
-    private var tweetSender = TweetSender(getStatusesService(), getMediaService())
+    private var tweetSender = TweetSender(statusesService, mediaService)
     private var prependLength = 0
     private var appendLength = 0
     private var bodyLength = 0
@@ -95,6 +87,11 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        tweetSender.unregisterCallback(callback)
+        super.onDestroy()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         val lastId = tweetSender.lastId
         if (lastId != null) {
@@ -129,7 +126,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             R.id.action_log_out -> {
                 alert(getString(R.string.confirm_log_out)) {
                     positiveButton(R.string.log_out) {
-                        getSessionManager().clearActiveSession()
+                        sessionManager.clearActiveSession()
                         startActivity(intentFor<LoginActivity>())
                         finish()
                     }
@@ -189,7 +186,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun startNewThread() {
-        tweetSender = TweetSender(getStatusesService(), getMediaService())
+        tweetSender = TweetSender(statusesService, mediaService)
         tweetSender.registerCallback(callback)
 
         editPrepend.setText("")
@@ -214,8 +211,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
         } else {
             if(ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_CONTACTS)) {
-                toast("We need to write files so that we can cache" +
-                        " pictures taken before we upload them to Twitter")
+                toast(R.string.storage_perm_explanation)
             }
 
             ActivityCompat.requestPermissions(this,

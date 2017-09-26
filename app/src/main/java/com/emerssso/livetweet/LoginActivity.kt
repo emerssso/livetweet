@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(getSessionManager().activeSession != null) {
+        if (sessionManager.activeSession != null) {
             startActivity(intentFor<TweetActivity>())
             finish()
         }
@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
                 customView = LayoutInflater.from(this@LoginActivity)
                         .inflate(R.layout.dialog_privacy_policy_body, null)
                 positiveButton(R.string.accept, {
-                        prefs.edit().putBoolean(FIRST_TIME_USE, false).apply()
+                    prefs.edit().putBoolean(FIRST_TIME_USE, false).apply()
                 })
                 negativeButton(R.string.reject, { finish() })
                 onCancelled {

@@ -22,4 +22,9 @@
     <string name="privacy_policy">TalkTweeter doesn\'t keep any of your personal information either locally or online (if you don\'t believe me, see for yourself: https://github.com/emerssso/livetweet).\n\nHowever, it does have a privacy policy to comply with Google\'s rules. It is available here: https://www.iubenda.com/privacy-policy/8224947.\nPlease accept the policy before continuing to use the app.</string>
     <string name="policy_not_accepted">Please accept the privacy policy before using TalkTweeter</string>
     <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="view_source_code">View Source Code</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="finish_thread">Do you want to finish the current talk thread?</string>
+    <string name="log_out">Log out</string>
+    <string name="confirm_log_out">Are you sure you want to log out?</string>
 </resources>

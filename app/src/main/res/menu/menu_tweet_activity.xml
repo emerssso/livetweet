@@ -10,6 +10,9 @@
         android:id="@+id/action_add_photo"
         android:icon="@drawable/ic_add_a_photo_white_24dp"
         android:title="@string/attach_a_photo"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_log_out"
+        android:title="@string/log_out"
+        app:showAsAction="never"/>
 </menu>

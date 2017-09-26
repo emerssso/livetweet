@@ -38,6 +38,8 @@ internal fun getStatusesService() = TwitterCore.getInstance().apiClient.statuses
 
 internal fun getMediaService() = TwitterCore.getInstance().apiClient.mediaService
 
+internal fun getSessionManager() = TwitterCore.getInstance().sessionManager
+
 val EditText.content: String
     get() = text.toString()
 

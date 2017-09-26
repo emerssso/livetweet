@@ -116,7 +116,7 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_finish_talk -> {
-                alert("Do you want to finish the current talk thread?") {
+                alert(R.string.finish_thread) {
                     yesButton { startNewThread() }
                     noButton {  }
                 }.show()
@@ -124,6 +124,17 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
             }
             R.id.action_add_photo -> {
                 selectPhoto()
+                return true
+            }
+            R.id.action_log_out -> {
+                alert(getString(R.string.confirm_log_out)) {
+                    positiveButton(R.string.log_out) {
+                        getSessionManager().clearActiveSession()
+                        startActivity(intentFor<LoginActivity>())
+                        finish()
+                    }
+                    noButton {  }
+                }.show()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

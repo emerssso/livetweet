@@ -2,10 +2,9 @@ package com.emerssso.livetweet
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.Menu
@@ -23,6 +22,11 @@ import org.jetbrains.anko.*
 class LoginActivity : AppCompatActivity(), AnkoLogger {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if(getSessionManager().activeSession != null) {
+            startActivity(intentFor<TweetActivity>())
+            finish()
+        }
 
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
@@ -48,28 +52,19 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
         val prefs = getSharedPreferences(FIRST_TIME_USE, Context.MODE_PRIVATE)
 
         if (prefs.getBoolean(FIRST_TIME_USE, true)) {
-
-            val message = LayoutInflater.from(this)
-                    .inflate(R.layout.dialog_privacy_policy_body, null)
-
-            AlertDialog.Builder(this)
-                    .setTitle(R.string.privacy_policy_title)
-                    .setView(message)
-                    .setPositiveButton(R.string.accept, { _, i ->
-                        if (i == DialogInterface.BUTTON_POSITIVE) {
-                            prefs.edit().putBoolean(FIRST_TIME_USE, false).apply()
-                        }
-                    })
-                    .setNegativeButton(R.string.reject, { _, i ->
-                        if (i == DialogInterface.BUTTON_NEGATIVE) {
-                            finish()
-                        }
-                    })
-                    .setOnCancelListener {
-                        toast(R.string.policy_not_accepted)
-                        finish()
-                    }
-                    .create().show()
+            alert {
+                titleResource = R.string.privacy_policy_title
+                customView = LayoutInflater.from(this@LoginActivity)
+                        .inflate(R.layout.dialog_privacy_policy_body, null)
+                positiveButton(R.string.accept, {
+                        prefs.edit().putBoolean(FIRST_TIME_USE, false).apply()
+                })
+                negativeButton(R.string.reject, { finish() })
+                onCancelled {
+                    toast(R.string.policy_not_accepted)
+                    finish()
+                }
+            }.show()
         }
     }
 
@@ -89,6 +84,16 @@ class LoginActivity : AppCompatActivity(), AnkoLogger {
                 LibsBuilder().withActivityStyle(Libs.ActivityStyle.DARK)
                         .withAutoDetect(true)
                         .start(this)
+                return true
+            }
+            R.id.action_see_source -> {
+                startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/emerssso/livetweet")))
+                return true
+            }
+            R.id.action_send_feedback -> {
+                startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/emerssso/livetweet/issues")))
                 return true
             }
             else -> return super.onContextItemSelected(item)

@@ -43,15 +43,14 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
 
         setSupportActionBar(toolbar)
 
-        if (savedInstanceState != null) {
-            tweetSender.lastId = savedInstanceState.getLong(KEY_LAST_UPDATE_ID)
+        tweetSender.lastId = savedInstanceState?.getLong(KEY_LAST_UPDATE_ID)
 
-            val path = savedInstanceState.getString(KEY_PHOTO_FILE)
-            photoFile = if (path != null) File(path) else null
-            if(photoFile != null) {
-                showPhotoFile()
-            }
+        val path = savedInstanceState?.getString(KEY_PHOTO_FILE)
+        photoFile = if (path != null) File(path) else null
+        if(photoFile != null) {
+            showPhotoFile()
         }
+
         tweetSender.registerCallback(callback)
 
         editPrepend.onTextChanged {

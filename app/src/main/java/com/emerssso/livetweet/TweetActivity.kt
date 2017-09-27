@@ -10,7 +10,6 @@ import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class TweetActivity : AppCompatActivity(), AnkoLogger {
+class TweetActivity : ParentActivity(), AnkoLogger {
 
     private var tweetSender = TweetSender(statusesService, mediaService)
     private var prependLength = 0
@@ -104,13 +103,14 @@ class TweetActivity : AppCompatActivity(), AnkoLogger {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_tweet_activity, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
             R.id.action_finish_talk -> {
                 alert(R.string.finish_thread) {
                     yesButton { startNewThread() }

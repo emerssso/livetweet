@@ -8,7 +8,8 @@ import android.view.MenuItem
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 
-abstract class ParentActivity : AppCompatActivity() {
+/** Parent Activity class which contains shared menu functionality */
+internal abstract class ParentActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_login_activity, menu)
         return true

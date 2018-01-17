@@ -12,7 +12,10 @@ import com.twitter.sdk.android.core.TwitterSession
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.*
 
-
+/** 
+ * Activity responsible for initial user login. 
+ * Also enforces acceptance of privacy policy.
+ */
 class LoginActivity : ParentActivity(), AnkoLogger {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

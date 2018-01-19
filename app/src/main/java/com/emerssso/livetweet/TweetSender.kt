@@ -15,6 +15,10 @@ import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
 import java.util.*
 
+/**
+ * Class responsible for sending tweets to Twitter APIs via [statusesService].
+ * Tweets may optionally include images, which are sent via [mediaService].
+ */
 class TweetSender(private val statusesService: StatusesService,
                   private val mediaService: MediaService) : AnkoLogger {
 

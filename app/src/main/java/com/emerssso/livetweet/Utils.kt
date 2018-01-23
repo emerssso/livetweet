@@ -6,7 +6,7 @@ import android.widget.EditText
 import com.twitter.sdk.android.core.TwitterCore
 
 const val FIRST_TIME_USE = "com.emerssso.livetweet.FIRST_TIME_USE"
-const val MAX_UPDATE_LENGTH = 140
+const val MAX_UPDATE_LENGTH = 280
 const val KEY_LAST_UPDATE_ID = "LAST_UPDATE_ID"
 const val KEY_PHOTO_FILE = "KEY_PHOTO_FILE"
 const val REQUEST_PHOTO = 1

@@ -199,11 +199,13 @@ class TweetActivity : ParentActivity(), AnkoLogger {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
 
-            photoFile = File.createTempFile("JPEG_" + timeStamp + "_", ".jpg",
+            val tempFile = File.createTempFile("JPEG_" + timeStamp + "_", ".jpg",
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))
+            photoFile = tempFile
 
+            // getUriForFile requires File!, photoFile is File? We need a middleman here: tempFile
             val photoUri = FileProvider.getUriForFile(this,
-                    "com.emerssso.livetweet.fileprovider", photoFile)
+                    "com.emerssso.livetweet.fileprovider", tempFile)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
             startActivityForResult(cameraIntent, REQUEST_PHOTO)

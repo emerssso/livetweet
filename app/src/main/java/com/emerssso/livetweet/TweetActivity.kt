@@ -31,7 +31,7 @@ class TweetActivity : ParentActivity(), AnkoLogger {
     private var resumed = false
     private val callback = object : TweetSender.FailureCallback {
         override fun onFailure(exception: TwitterException?) {
-            if(resumed) toast(getString(R.string.unable_to_send, exception?.message))
+            if (resumed) toast(getString(R.string.unable_to_send, exception?.message))
         }
     }
 
@@ -44,8 +44,8 @@ class TweetActivity : ParentActivity(), AnkoLogger {
         tweetSender.lastId = savedInstanceState?.getLong(KEY_LAST_UPDATE_ID)
 
         val path = savedInstanceState?.getString(KEY_PHOTO_FILE)
-        photoFile = if (path != null) File(path) else null
-        if(photoFile != null) {
+        photoFile = path?.let { File(path) }
+        if (photoFile != null) {
             showPhotoFile()
         }
 
@@ -88,7 +88,7 @@ class TweetActivity : ParentActivity(), AnkoLogger {
             outState.putLong(KEY_LAST_UPDATE_ID, lastId)
         }
 
-        if(photoFile != null) {
+        if (photoFile != null) {
             outState.putString(KEY_PHOTO_FILE, photoFile?.absolutePath)
         }
 
@@ -106,7 +106,7 @@ class TweetActivity : ParentActivity(), AnkoLogger {
             R.id.action_finish_talk -> {
                 alert(R.string.finish_thread) {
                     yesButton { startNewThread() }
-                    noButton {  }
+                    noButton { }
                 }.show()
                 return true
             }
@@ -121,7 +121,7 @@ class TweetActivity : ParentActivity(), AnkoLogger {
                         startActivity(intentFor<LoginActivity>())
                         finish()
                     }
-                    noButton {  }
+                    noButton { }
                 }.show()
                 return true
             }
@@ -152,13 +152,16 @@ class TweetActivity : ParentActivity(), AnkoLogger {
         attachedPhoto.visibility = View.VISIBLE
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(requestCode == REQUEST_WRITE_PERMISSION) {
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                selectPhoto()
-            }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_WRITE_PERMISSION ->
+                if (grantResults.isNotEmpty() &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectPhoto()
+                }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun setRemainingChars() {
@@ -185,8 +188,9 @@ class TweetActivity : ParentActivity(), AnkoLogger {
     }
 
     private fun selectPhoto() {
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        val permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permission == PackageManager.PERMISSION_GRANTED) {
 
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
@@ -202,8 +206,8 @@ class TweetActivity : ParentActivity(), AnkoLogger {
 
             startActivityForResult(cameraIntent, REQUEST_PHOTO)
         } else {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_CONTACTS)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 toast(R.string.storage_perm_explanation)
             }
 

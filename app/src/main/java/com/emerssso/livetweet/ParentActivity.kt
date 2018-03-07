@@ -13,7 +13,7 @@ import com.mikepenz.aboutlibraries.LibsBuilder
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
-/** Parent Activity class which contains shared menu functionality */
+/** Parent Activity class which contains shared menu and privacy policy functionality */
 abstract class ParentActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_login_activity, menu)
@@ -27,14 +27,16 @@ abstract class ParentActivity : AppCompatActivity() {
         val prefs = getSharedPreferences(FIRST_TIME_USE, Context.MODE_PRIVATE)
 
         if (prefs.getBoolean(FIRST_TIME_USE, true)) {
-            alert {
-                titleResource = R.string.privacy_policy_title
+            alert(R.string.privacy_policy_title) {
                 customView = LayoutInflater.from(this@ParentActivity)
                         .inflate(R.layout.dialog_privacy_policy_body, null)
-                positiveButton(R.string.accept, {
+
+                positiveButton(R.string.accept) {
                     prefs.edit().putBoolean(FIRST_TIME_USE, false).apply()
-                })
-                negativeButton(R.string.reject, { finish() })
+                }
+
+                negativeButton(R.string.reject) { finish() }
+
                 onCancelled {
                     toast(R.string.policy_not_accepted)
                     finish()

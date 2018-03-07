@@ -32,7 +32,7 @@ class TweetSender(private val statusesService: StatusesService,
     }
 
     fun queueTweet(status: Status) {
-        if (messages.isEmpty() && !inProgress) {
+        if (!inProgress) {
             sendTweet(status)
         } else {
             messages.add(status)
@@ -92,7 +92,7 @@ class TweetSender(private val statusesService: StatusesService,
     }
 
     private fun sendNextTweet() {
-        if (!messages.isEmpty()) {
+        if (messages.isNotEmpty()) {
             sendTweet(messages.remove())
         } else {
             inProgress = false

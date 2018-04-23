@@ -16,10 +16,16 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
-        Properties twitter = new Properties()
-        twitter.load(project.rootProject.file('twitter.properties').newDataInputStream())
-        def key = twitter.consumerKey
-        def secret = twitter.consumerSecret
+        def key = "MISSING!"
+        def secret = "MISSING!"
+        try {
+            Properties twitter = new Properties()
+            twitter.load(project.rootProject.file('twitter.properties').newDataInputStream())
+            key = twitter.consumerKey
+            secret = twitter.consumerSecret
+        } catch(Exception e) {
+            println "twitter.properties is missing. App probably won't work."
+        }
 
         buildConfigField "String", "TWITTER_CONSUMER_KEY", key
         buildConfigField "String", "TWITTER_CONSUMER_SECRET", secret

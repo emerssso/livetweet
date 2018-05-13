@@ -17,15 +17,13 @@
         android:fullBackupContent="false"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LauncherActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".TweetActivity"
-                  android:windowSoftInputMode="adjustResize">
         </activity>
 
         <provider

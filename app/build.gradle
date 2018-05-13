@@ -61,11 +61,19 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.9'
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
     testImplementation 'org.robolectric:robolectric:3.8'
+
+    def nav_version = "1.0.0-alpha01"
+
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
+
+    // optional - Test helpers
+    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:$nav_version"
 }
 
 androidExtensions {

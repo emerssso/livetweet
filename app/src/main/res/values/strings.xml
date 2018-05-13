@@ -28,4 +28,5 @@
     <string name="log_out">Log out</string>
     <string name="confirm_log_out">Are you sure you want to log out?</string>
     <string name="storage_perm_explanation">We need to write files so that we can cache pictures taken before we upload them to Twitter</string>
+    <string name="log_in_to_twitter">Log in to Twitter</string>
 </resources>

@@ -4,20 +4,25 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.navigation.findNavController
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 /** Parent Activity class which contains shared menu and privacy policy functionality */
-abstract class ParentActivity : AppCompatActivity() {
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_login_activity, menu)
-        return true
+open class LauncherActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_launcher)
+
+        setSupportActionBar(findViewById(R.id.toolbar))
     }
 
     @SuppressLint("InflateParams") //age old "can't pass the parent if it doesn't exist" problem
@@ -28,7 +33,7 @@ abstract class ParentActivity : AppCompatActivity() {
 
         if (prefs.getBoolean(FIRST_TIME_USE, true)) {
             alert(R.string.privacy_policy_title) {
-                customView = LayoutInflater.from(this@ParentActivity)
+                customView = LayoutInflater.from(this@LauncherActivity)
                         .inflate(R.layout.dialog_privacy_policy_body, null)
 
                 positiveButton(R.string.accept) {
@@ -43,6 +48,11 @@ abstract class ParentActivity : AppCompatActivity() {
                 }
             }.show()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_login_activity, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

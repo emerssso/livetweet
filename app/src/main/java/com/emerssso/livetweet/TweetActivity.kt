@@ -20,8 +20,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class TweetActivity : ParentActivity(), AnkoLogger {
+class TweetActivity : LauncherActivity(), AnkoLogger {
 
     private var tweetSender = TweetSender(statusesService, mediaService)
     private var prependLength = 0
